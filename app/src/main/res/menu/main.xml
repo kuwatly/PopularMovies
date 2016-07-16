@@ -13,14 +13,14 @@
      See the License for the specific language governing permissions and
      limitations under the License.
     -->
-<resources>
-
-    <!-- Base application theme. -->
-    <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
-        <!-- Customize your theme here. -->
-        <item name="colorPrimary">@color/colorPrimary</item>
-        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
-        <item name="colorAccent">@color/colorAccent</item>
-    </style>
-
-</resources>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools" tools:context=".MainActivity">
+    <item android:id="@+id/most_popular"
+        android:title="@string/most_popular"
+        android:orderInCategory="100"
+        app:showAsAction="never" />
+    <item android:id="@+id/top_rated"
+        android:title="@string/top_rated"
+        app:showAsAction="never" />
+</menu>
