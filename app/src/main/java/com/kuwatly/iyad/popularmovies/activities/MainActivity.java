@@ -36,7 +36,11 @@ import com.kuwatly.iyad.popularmovies.network.FetchMoviesTask;
 
 import java.util.ArrayList;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
+
 public class MainActivity extends ActionBarActivity {
+    @BindView(R.id.gridview) GridView gridview;
     private ImageAdapter mImageAdapter;
     private ArrayList<Movie> movieList;
     private int sortBy;
@@ -45,6 +49,7 @@ public class MainActivity extends ActionBarActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         if (savedInstanceState == null ) {
             movieList = new ArrayList<>();
             sortBy=R.id.most_popular;
@@ -53,10 +58,9 @@ public class MainActivity extends ActionBarActivity {
             movieList = savedInstanceState.getParcelableArrayList("Movies");
             sortBy=savedInstanceState.getInt(STATE_SORT);
         }
-
         setContentView(R.layout.activity_main);
+        ButterKnife.bind(this);
 
-        GridView gridview = (GridView) findViewById(R.id.gridview);
         mImageAdapter = new ImageAdapter(this);
         gridview.setAdapter(mImageAdapter);
         updateMovies();

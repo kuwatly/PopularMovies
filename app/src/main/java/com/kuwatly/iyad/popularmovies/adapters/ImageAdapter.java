@@ -31,6 +31,9 @@ import com.squareup.picasso.Picasso;
 import java.util.ArrayList;
 import java.util.List;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
+
 public class ImageAdapter extends BaseAdapter {
     public final Context context;
     private List<Movie> movies = new ArrayList<>();
@@ -43,15 +46,14 @@ public class ImageAdapter extends BaseAdapter {
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         View gridItem = convertView;
-        Holder holder;
+        ViewHolder holder;
         if (gridItem == null) {
             LayoutInflater inflater = ((Activity) context).getLayoutInflater();
             gridItem = inflater.inflate(R.layout.grid_item, parent, false);
-            holder = new Holder();
-            holder.imageItem = (SquaredImageView) gridItem.findViewById(R.id.item_image);
+            holder = new ViewHolder(gridItem);
             gridItem.setTag(holder);
         } else {
-            holder = (Holder) gridItem.getTag();
+            holder = (ViewHolder) gridItem.getTag();
         }
         Movie m = getItem(position);
 
@@ -93,7 +95,11 @@ public class ImageAdapter extends BaseAdapter {
         movies.clear();
     }
 
-    static class Holder {
-        SquaredImageView imageItem;
+    static class ViewHolder {
+        @BindView(R.id.item_image) SquaredImageView imageItem;
+
+        public ViewHolder(View view) {
+            ButterKnife.bind(this, view);
+        }
     }
 }

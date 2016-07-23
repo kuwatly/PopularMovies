@@ -20,7 +20,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.ActionBarActivity;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -31,6 +30,10 @@ import com.kuwatly.iyad.popularmovies.R;
 import com.kuwatly.iyad.popularmovies.models.Movie;
 import com.kuwatly.iyad.popularmovies.views.SquaredImageView;
 import com.squareup.picasso.Picasso;
+
+import butterknife.BindView;
+import butterknife.ButterKnife;
+import butterknife.Unbinder;
 
 
 public class DetailActivity extends ActionBarActivity {
@@ -47,6 +50,12 @@ public class DetailActivity extends ActionBarActivity {
     }
 
     public static class DetailFragment  extends Fragment {
+        @BindView(R.id.detail_image) SquaredImageView detailImage;
+        @BindView(R.id.detail_original_title) TextView detailOriginalTitle;
+        @BindView(R.id.detail_release_date) TextView detailReleaseDate;
+        @BindView(R.id.detail_vote_average) RatingBar detailVoteAverage;
+        @BindView(R.id.detail_overview) TextView detailOverview;
+        private Unbinder unbinder;
 
         public DetailFragment() {
         }
@@ -57,21 +66,12 @@ public class DetailActivity extends ActionBarActivity {
 
             View rootView = inflater.inflate(R.layout.fragment_detail, container, false);
 
+
             Intent intent = getActivity().getIntent();
             if (intent != null && intent.hasExtra(Intent.EXTRA_TEXT)) {
                 Movie movieParcelableObject = (Movie) intent.getParcelableExtra(intent.EXTRA_TEXT);
                 String imageURL = movieParcelableObject.getPosterPath();
-
-                SquaredImageView detailImage =
-                        (SquaredImageView) rootView.findViewById(R.id.detail_image);
-                TextView detailOriginalTitle =
-                        (TextView) rootView.findViewById(R.id.detail_original_title);
-                TextView detailReleaseDate =
-                        (TextView) rootView.findViewById(R.id.detail_release_date);
-                RatingBar detailVoteAverage =
-                        (RatingBar) rootView.findViewById(R.id.detail_vote_average);
-                TextView detailOverview =
-                        (TextView) rootView.findViewById(R.id.detail_overview);
+                unbinder = ButterKnife.bind(this, rootView);
 
                 Picasso.with(getActivity()) //
                         .load(imageURL.replace("w185","w780")) //w780 retrives highest quality image
@@ -89,6 +89,10 @@ public class DetailActivity extends ActionBarActivity {
             }
 
             return rootView;
+        }
+        @Override public void onDestroyView() {
+            super.onDestroyView();
+            unbinder.unbind();
         }
     }
 }
