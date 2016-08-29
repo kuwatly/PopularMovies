@@ -15,7 +15,7 @@
      limitations under the License.
     -->
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent" android:layout_height="match_parent">
+    android:layout_width="match_parent" android:layout_height="@dimen/grid_column_height">
     <com.kuwatly.iyad.popularmovies.views.SquaredImageView
         android:id="@+id/item_image"
         android:layout_width="match_parent"

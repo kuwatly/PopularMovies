@@ -1,3 +1,4 @@
+<?xml version="1.0" encoding="utf-8"?>
 <!--
      Copyright (C) 2016 Iyad Kuwatly
 
@@ -13,17 +14,16 @@
      See the License for the specific language governing permissions and
      limitations under the License.
     -->
-<menu xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools" tools:context=".MainActivity">
-    <item android:id="@+id/most_popular"
-        android:title="@string/most_popular"
-        android:orderInCategory="100"
-        app:showAsAction="never" />
-    <item android:id="@+id/top_rated"
-        android:title="@string/top_rated"
-        app:showAsAction="never" />
-    <item android:id="@+id/favorite"
-        android:title="@string/favorite"
-        app:showAsAction="never" />
-</menu>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:foreground="?android:attr/selectableItemBackground">
+
+    <com.kuwatly.iyad.popularmovies.views.SquaredImageView
+        android:id="@+id/trailer_thumbnail"
+        android:layout_width="@dimen/trailer_width_for_detail"
+        android:layout_height="@dimen/trailer_height_for_detail"
+        android:scaleType="centerCrop"
+        />
+
+</FrameLayout>

@@ -16,83 +16,35 @@
 
 package com.kuwatly.iyad.popularmovies.activities;
 
-import android.content.Intent;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
 import android.support.v7.app.ActionBarActivity;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.RatingBar;
-import android.widget.TextView;
 
 import com.kuwatly.iyad.popularmovies.R;
-import com.kuwatly.iyad.popularmovies.models.Movie;
-import com.kuwatly.iyad.popularmovies.views.SquaredImageView;
-import com.squareup.picasso.Picasso;
-
-import butterknife.BindView;
-import butterknife.ButterKnife;
-import butterknife.Unbinder;
+import com.kuwatly.iyad.popularmovies.fragments.DetailFragment;
 
 
 public class DetailActivity extends ActionBarActivity {
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_detail);
+
+
         if (savedInstanceState == null) {
+            // Create the detail fragment and add it to the activity
+            // using a fragment transaction.
+
+            Bundle arguments = new Bundle();
+            arguments.putParcelable(DetailFragment.DETAIL_URI, getIntent().getData());
+
+            DetailFragment fragment = new DetailFragment();
+            fragment.setArguments(arguments);
+
+
             getSupportFragmentManager().beginTransaction()
-                    .add(R.id.container, new DetailFragment())
+                    .add(R.id.movie_detail_container, fragment )
                     .commit();
         }
     }
 
-    public static class DetailFragment  extends Fragment {
-        @BindView(R.id.detail_image) SquaredImageView detailImage;
-        @BindView(R.id.detail_original_title) TextView detailOriginalTitle;
-        @BindView(R.id.detail_release_date) TextView detailReleaseDate;
-        @BindView(R.id.detail_vote_average) RatingBar detailVoteAverage;
-        @BindView(R.id.detail_overview) TextView detailOverview;
-        private Unbinder unbinder;
-
-        public DetailFragment() {
-        }
-
-        @Override
-        public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                                 Bundle savedInstanceState) {
-
-            View rootView = inflater.inflate(R.layout.fragment_detail, container, false);
-
-
-            Intent intent = getActivity().getIntent();
-            if (intent != null && intent.hasExtra(Intent.EXTRA_TEXT)) {
-                Movie movieParcelableObject = (Movie) intent.getParcelableExtra(intent.EXTRA_TEXT);
-                String imageURL = movieParcelableObject.getPosterPath();
-                unbinder = ButterKnife.bind(this, rootView);
-
-                Picasso.with(getActivity()) //
-                        .load(imageURL.replace("w185","w780")) //w780 retrives highest quality image
-                        .placeholder(R.drawable.placeholder)
-                        .error(R.drawable.error)
-                        .fit()
-                        .tag(getActivity())
-                        .into(detailImage);
-                detailOriginalTitle.setText(movieParcelableObject.getOriginalTitle());
-                detailReleaseDate.setText(movieParcelableObject.getReleaseDate());
-                // Rating is based of 10, divide by two to represent it with 5 stars rating
-                detailVoteAverage.setRating(
-                        Float.valueOf(movieParcelableObject.getVote_average())/2);
-                detailOverview.setText(movieParcelableObject.getOverview());
-            }
-
-            return rootView;
-        }
-        @Override public void onDestroyView() {
-            super.onDestroyView();
-            unbinder.unbind();
-        }
-    }
 }

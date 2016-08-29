@@ -1,3 +1,4 @@
+<?xml version="1.0" encoding="utf-8"?>
 <!--
      Copyright (C) 2016 Iyad Kuwatly
 
@@ -14,16 +15,9 @@
      limitations under the License.
     -->
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools" tools:context=".MainActivity">
-    <item android:id="@+id/most_popular"
-        android:title="@string/most_popular"
-        android:orderInCategory="100"
-        app:showAsAction="never" />
-    <item android:id="@+id/top_rated"
-        android:title="@string/top_rated"
-        app:showAsAction="never" />
-    <item android:id="@+id/favorite"
-        android:title="@string/favorite"
-        app:showAsAction="never" />
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <item android:id="@+id/action_share"
+        android:title="@string/action_share"
+        app:showAsAction="always"
+        app:actionProviderClass="android.support.v7.widget.ShareActionProvider" />
 </menu>

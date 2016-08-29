@@ -16,111 +16,85 @@
 
 package com.kuwatly.iyad.popularmovies.activities;
 
-import android.content.Context;
 import android.content.Intent;
-import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
-import android.view.Menu;
-import android.view.MenuItem;
-import android.view.View;
-import android.widget.AdapterView;
-import android.widget.GridView;
-import android.widget.Toast;
 
 import com.kuwatly.iyad.popularmovies.R;
-import com.kuwatly.iyad.popularmovies.adapters.ImageAdapter;
-import com.kuwatly.iyad.popularmovies.models.Movie;
-import com.kuwatly.iyad.popularmovies.network.FetchMoviesTask;
+import com.kuwatly.iyad.popularmovies.fragments.DetailFragment;
+import com.kuwatly.iyad.popularmovies.fragments.MainFragment;
+import com.kuwatly.iyad.popularmovies.sync.MovieSyncAdapter;
 
-import java.util.ArrayList;
+public class MainActivity extends ActionBarActivity implements MainFragment.Callback {
 
-import butterknife.BindView;
-import butterknife.ButterKnife;
 
-public class MainActivity extends ActionBarActivity {
-    @BindView(R.id.gridview) GridView gridview;
-    private ImageAdapter mImageAdapter;
-    private ArrayList<Movie> movieList;
-    private int sortBy;
-    static final String STATE_SORT = "sortOption";
+    private final String LOG_TAG = MainActivity.class.getSimpleName();
+    private static final String DETAILFRAGMENT_TAG = "DFTAG";
+    private boolean mTwoPane;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        if (savedInstanceState == null ) {
-            movieList = new ArrayList<>();
-            sortBy=R.id.most_popular;
-        }
-        else {
-            movieList = savedInstanceState.getParcelableArrayList("Movies");
-            sortBy=savedInstanceState.getInt(STATE_SORT);
-        }
         setContentView(R.layout.activity_main);
-        ButterKnife.bind(this);
 
-        mImageAdapter = new ImageAdapter(this);
-        gridview.setAdapter(mImageAdapter);
-        updateMovies();
-
-        gridview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            public void onItemClick(AdapterView<?> parent, View v,
-                                    int position, long id) {
-                Movie m = mImageAdapter.getItem(position);
-                Intent intent = new Intent(getApplicationContext(), DetailActivity.class)
-                                                .putExtra(Intent.EXTRA_TEXT, m);
-                                startActivity(intent);
+        if (findViewById(R.id.movie_detail_container) != null) {
+            // The detail container view will be present only in the large-screen layouts
+            // (res/layout-sw600dp). If this view is present, then the activity should be
+            // in two-pane mode.
+            mTwoPane = true;
+            //EventBus.getDefault().post(new MessageEvent(0));
+            // In two-pane mode, show the detail view in this activity by
+            // adding or replacing the detail fragment using a
+            // fragment transaction.
+            if (savedInstanceState == null) {
+                getSupportFragmentManager().beginTransaction()
+                        .replace(R.id.movie_detail_container, new DetailFragment(), DETAILFRAGMENT_TAG)
+                        .commit();
             }
-        });
-    }
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.main, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        int id = item.getItemId();
-
-        if (id != sortBy) {
-            sortBy = id;
-            updateMovies();
-            return true;
+        } else {
+            mTwoPane = false;
+            getSupportActionBar().setElevation(0f);
         }
-        return super.onOptionsItemSelected(item);
-    }
-    @Override
-    public void onStart() {
-        super.onStart();
-        updateMovies();
+
+        MovieSyncAdapter.initializeSyncAdapter(this);
     }
 
     @Override
     protected void onSaveInstanceState(Bundle outState) {
-        outState.putInt(STATE_SORT, sortBy);
-        outState.putParcelableArrayList("Movies", movieList);
         super.onSaveInstanceState(outState);
     }
 
-    private void updateMovies() {
-        if (isOnline()){
-            FetchMoviesTask moviesTask = new FetchMoviesTask(mImageAdapter);
-            moviesTask.execute(sortBy);
-        }
-        else {
-            Toast.makeText(mImageAdapter.context,
-                    "Unable to connect to Internet!",
-                    Toast.LENGTH_LONG).show();
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+    }
+
+    @Override
+    public void onItemSelected(Uri contentUri) {
+        if (mTwoPane) {
+            // In two-pane mode, show the detail view in this activity by
+            // adding or replacing the detail fragment using a
+            // fragment transaction.
+            Bundle args = new Bundle();
+            args.putParcelable(DetailFragment.DETAIL_URI, contentUri);
+
+            DetailFragment fragment = new DetailFragment();
+            fragment.setArguments(args);
+
+            getSupportFragmentManager().beginTransaction()
+                    .replace(R.id.movie_detail_container, fragment, DETAILFRAGMENT_TAG)
+                    .commit();
+        } else {
+            Intent intent = new Intent(this, DetailActivity.class)
+                    .setData(contentUri);
+            startActivity(intent);
         }
     }
-    public boolean isOnline() {
-        ConnectivityManager cm =
-                (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
-        NetworkInfo netInfo = cm.getActiveNetworkInfo();
-        return netInfo != null && netInfo.isConnectedOrConnecting();
-    }
+
+
 }
+

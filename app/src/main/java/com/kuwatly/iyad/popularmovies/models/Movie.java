@@ -22,32 +22,45 @@ import android.os.Parcelable;
 
 public class Movie implements Parcelable {
 
+    String id;
     String originalTitle;
     String posterPath;
     String overview;
+    Float vote_average;
     String releaseDate;
-    String id;
-    String title;
-    String vote_average;
+    String runtime;
 
     public Movie() {
+        this.id = "";
         this.originalTitle = "";
         this.posterPath = "";
         this.overview = "";
+        this.vote_average=0.0F;
         this.releaseDate = "";
-        this.id = "";
-        this.title = "";
-        this.vote_average = "";
+        this.runtime="";
+
     }
 
+    public static Movie getSampleMovie(){
+        Movie m = new Movie();
+        m.setId("305784");
+        m.setOriginalTitle("The Transcendental Object at the End of Time");
+        m.setPosterPath("/lsPBx1PZqZ87ZXc5JYFRVKAm6Bq.jpg");
+        m.setOverview("An audio-visual journey through the mind of Terence McKenna.");
+        m.setVote_average(9.5F);
+        m.setReleaseDate("2014-11-16");
+        m.setRuntime("120m");
+        return m;
+
+    }
     private Movie(Parcel in) {
+        id = in.readString();
         originalTitle = in.readString();
         posterPath = in.readString();
         overview = in.readString();
+        vote_average = in.readFloat();
         releaseDate = in.readString();
-        id = in.readString();
-        title = in.readString();
-        vote_average = in.readString();
+        runtime = in.readString();
     }
 
     @Override
@@ -57,23 +70,19 @@ public class Movie implements Parcelable {
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(id);
         dest.writeString(originalTitle);
         dest.writeString(posterPath);
         dest.writeString(overview);
+        dest.writeFloat(vote_average);
         dest.writeString(releaseDate);
-        dest.writeString(id);
-        dest.writeString(title);
-        dest.writeString(vote_average);
+        dest.writeString(runtime);
 
     }
 
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();
-
-        sb.append("Title: ");
-        sb.append(title);
-        sb.append("\n");
 
         sb.append("id: ");
         sb.append(id);
@@ -87,16 +96,20 @@ public class Movie implements Parcelable {
         sb.append(posterPath);
         sb.append("\n");
 
-        sb.append("releaseDate: ");
-        sb.append(releaseDate);
-        sb.append("\n");
-
         sb.append("overview: ");
         sb.append(overview);
         sb.append("\n");
 
         sb.append("vote_average: ");
         sb.append(vote_average);
+        sb.append("\n");
+
+        sb.append("releaseDate: ");
+        sb.append(releaseDate);
+        sb.append("\n");
+
+        sb.append("runtime: ");
+        sb.append(runtime);
         sb.append("\n");
 
         return sb.toString();
@@ -116,19 +129,23 @@ public class Movie implements Parcelable {
     };
 
 
+    public String getId() {
+        return id;
+    }
+    public void setId(String id) {
+        this.id = id;
+    }
+
     public String getOriginalTitle() {
         return originalTitle;
     }
-
-    public void setOriginalTitle(String originalTitle) {
-        this.originalTitle = originalTitle;
+    public void setOriginalTitle(String orginalTitle) {
+        this.originalTitle = orginalTitle;
     }
-
 
     public String getPosterPath() {
         return posterPath;
     }
-
     public void setPosterPath(String posterPath) {
         this.posterPath = posterPath;
     }
@@ -136,44 +153,28 @@ public class Movie implements Parcelable {
     public String getOverview() {
         return overview;
     }
-
     public void setOverview(String overview) {
         this.overview = overview;
     }
 
+    public Float getVote_average() {
+        return vote_average;
+    }
+    public void setVote_average(Float vote_average) {
+        this.vote_average = vote_average;
+    }
 
     public String getReleaseDate() {
         return releaseDate;
     }
-
     public void setReleaseDate(String releaseDate) {
         this.releaseDate = releaseDate;
     }
 
-
-    public String getId() {
-        return id;
+    public String getRuntime() {
+        return runtime;
     }
-
-    public void setId(String id) {
-        this.id = id;
+    public void setRuntime(String runtime) {
+        this.runtime = runtime;
     }
-
-    public String getTitle() {
-        return title;
-    }
-
-    public void setTitle(String title) {
-        this.title = title;
-    }
-
-    public String getVote_average() {
-        return vote_average;
-    }
-
-    public void setVote_average(String vote_average) {
-        this.vote_average = vote_average;
-    }
-
-
 }
